@@ -64,6 +64,7 @@ public class YouTubeDownloader {
             sb.append("--extract-audio --audio-format=mp3 ");
         }
         sb.append(url);
+        sb.append("|| pause");
         cmd.add(sb.toString());
         
         try {
@@ -94,6 +95,7 @@ public class YouTubeDownloader {
         sb.append("start cmd /c ");
         sb.append(youtubedl.getAbsolutePath());
         sb.append(" --update");
+        sb.append("|| pause");
         cmd.add(sb.toString());
         
         try {

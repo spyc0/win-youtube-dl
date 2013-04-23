@@ -25,6 +25,8 @@ package org.fredy.winyoutubedl;
 import java.io.File;
 
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.KeyAdapter;
+import org.eclipse.swt.events.KeyEvent;
 import org.eclipse.swt.events.MouseAdapter;
 import org.eclipse.swt.events.MouseEvent;
 import org.eclipse.swt.events.SelectionAdapter;
@@ -80,16 +82,34 @@ public class WinYouTubeDownloader {
         urlLabel.setText("URL:");
         urlText = new Text(c1, SWT.BORDER);
         urlText.setLayoutData(new GridData(SWT.FILL, SWT.NONE, true, false));
+        urlText.addKeyListener(new KeyAdapter() {
+            @Override
+            public void keyReleased(KeyEvent e) {
+                if (!urlText.getText().isEmpty()) {
+                    downloadButton.setEnabled(true);
+                } else {
+                    downloadButton.setEnabled(false);
+                }
+                parent.pack();
+            }
+        });
         toMP3Checkbox = new Button(c1, SWT.CHECK);
         toMP3Checkbox.setText("To MP3");
         toMP3Checkbox.setSelection(Settings.toMP3());
         toMP3Checkbox.addSelectionListener(new SelectionAdapter() {
             @Override
             public void widgetSelected(SelectionEvent e) {
-                Settings.setToMP3(toMP3Checkbox.getSelection());
+                try {
+                    Settings.setToMP3(toMP3Checkbox.getSelection());
+                } catch (Exception ex) {
+                    MessageBox mb = new MessageBox(parent, SWT.ICON_ERROR);
+                    mb.setText("Error");
+                    mb.setMessage(ex.getMessage());
+                    mb.open();
+                }
             }
         });
-        
+
         Label folderLabel = new Label(c1, SWT.NONE);
         folderLabel.setText("Folder:");
         folderText = new Text(c1, SWT.BORDER);
@@ -106,11 +126,13 @@ public class WinYouTubeDownloader {
                 if (directory != null) {
                     folderText.setText(directory);
                     Settings.setDirectory(new File(directory));
+                    parent.pack();
                 }
             }
         });
         
         downloadButton = new Button(c1, SWT.PUSH);
+        downloadButton.setEnabled(false);
         GridData gridData = new GridData(SWT.NONE, SWT.NONE, false, false);
         gridData.horizontalSpan = 3;
         downloadButton.setLayoutData(gridData);
@@ -119,14 +141,23 @@ public class WinYouTubeDownloader {
             @Override
             public void mouseDown(MouseEvent e) {
                 try {
+                    if (!folderText.getText().startsWith("http://")
+                        && !folderText.getText().startsWith("https://")) {
+                        MessageBox mb = new MessageBox(parent, SWT.ICON_ERROR);
+                        mb.setText("Error");
+                        mb.setMessage("The URL must start with http:// or https://");
+                        mb.open();
+                        return;
+                    }
                     YouTubeDownloader.download(
                         folderText.getText(),
-                        urlText.getText(),
+                        urlText.getText().trim(),
                         toMP3Checkbox.getSelection());
                 } catch (Exception ex) {
                     MessageBox mb = new MessageBox(parent, SWT.ICON_ERROR);
                     mb.setText("Error");
                     mb.setMessage(ex.getMessage());
+                    mb.open();
                 }
             }
         });
@@ -146,6 +177,7 @@ public class WinYouTubeDownloader {
                     MessageBox mb = new MessageBox(parent, SWT.ICON_ERROR);
                     mb.setText("Error");
                     mb.setMessage(ex.getMessage());
+                    mb.open();
                 }
             }
         });
