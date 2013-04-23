@@ -31,6 +31,7 @@ task makePackage(dependsOn: ["jar"]) << {
     new File("win-youtube-dl.zip").delete()
     ant.zip(destfile: "win-youtube-dl.zip",
             basedir: ".",
-            includes: "ffmpeg.exe, ffplay.exe, ffprobe.exe, youtube-dl.exe, win-youtube-dl.exe")
+            includes: "ffmpeg.exe, ffplay.exe, ffprobe.exe, youtube-dl.exe, " +
+                      "win-youtube-dl.exe, youtube-dl.bat")
     new File("win-youtube-dl.exe").delete()
 }

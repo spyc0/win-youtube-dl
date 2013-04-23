@@ -172,7 +172,7 @@ public class WinYouTubeDownloader {
             @Override
             public void mouseDown(MouseEvent e) {
                 try {
-                    YouTubeDownloader.update();
+                    YouTubeDownloader.update(folderText.getText());
                 } catch (Exception ex) {
                     MessageBox mb = new MessageBox(parent, SWT.ICON_ERROR);
                     mb.setText("Error");

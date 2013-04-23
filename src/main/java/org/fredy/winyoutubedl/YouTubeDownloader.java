@@ -1,6 +1,5 @@
 package org.fredy.winyoutubedl;
 
-import java.io.File;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
@@ -55,21 +54,19 @@ public class YouTubeDownloader {
         List<String> cmd = new ArrayList<>();
         cmd.add("cmd");
         cmd.add("/c");
-        File youtubedl = new File(".", "youtube-dl.exe");
         StringBuilder sb = new StringBuilder();
         sb.append("start cmd /c ");
-        sb.append(youtubedl.getAbsolutePath());
-        sb.append(" --title --restrict-filenames ");
+        sb.append("youtube-dl.bat \"").append(directory).append("\"");
+        sb.append(" \"").append(System.getProperty("user.dir")).append("\"");
+        sb.append(" \"--title\" \"--restrict-filenames\" ");
         if (toMP3) {
-            sb.append("--extract-audio --audio-format=mp3 ");
+            sb.append("\"--extract-audio\" \"--audio-format=mp3\" ");
         }
-        sb.append(url);
-        sb.append("|| pause");
+        sb.append("\"").append(url).append("\"");
         cmd.add(sb.toString());
         
         try {
             Process p = new ProcessBuilder(cmd)
-                .directory(new File(directory))
                 .start();
             Thread t = new OutputEater(p.getInputStream(), p.getErrorStream());
             t.start();
@@ -86,16 +83,15 @@ public class YouTubeDownloader {
     /**
      * Performs an update of youtube-dl script.
      */
-    public static void update() {
+    public static void update(String directory) {
         List<String> cmd = new ArrayList<>();
         cmd.add("cmd");
         cmd.add("/c");
-        File youtubedl = new File(".", "youtube-dl.exe");
         StringBuilder sb = new StringBuilder();
         sb.append("start cmd /c ");
-        sb.append(youtubedl.getAbsolutePath());
-        sb.append(" --update");
-        sb.append("|| pause");
+        sb.append("youtube-dl.bat \"").append(directory).append("\"");
+        sb.append(" \"").append(System.getProperty("user.dir")).append("\"");
+        sb.append(" \"--update\"");
         cmd.add(sb.toString());
         
         try {
