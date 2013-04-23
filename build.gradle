@@ -1,0 +1,36 @@
+apply plugin: "java"
+apply plugin: "eclipse"
+
+defaultTasks = ["clean", "build", "jar", "makePackage"]
+
+repositories {
+    flatDir { dirs "lib" }
+}
+
+dependencies {
+    compile ":swt-4.2.2-win32-win32-x86_64"
+}   
+
+jar {
+    dependsOn configurations.runtime
+    from { configurations.runtime.collect { it.isDirectory() ? it : zipTree(it) } }
+    manifest {
+        attributes "Main-Class": "org.fredy.winyoutubedl.WinYouTubeDownloader"
+    }
+}
+
+task makePackage(dependsOn: ["jar"]) << {
+    if (!project.hasProperty("launch4j")) {
+        throw new RuntimeException("Specify launch4j directory")
+    }
+    def launch4jDir = new File(project.launch4j)
+    def launch4jConfig = new File(System.getProperty("user.dir"), "win-youtube-dl.xml").absolutePath
+    def p = "createexe.bat ${launch4jDir.absolutePath} ${launch4jConfig}".execute()
+    p.waitForProcessOutput(System.out, System.err)
+    
+    new File("win-youtube-dl.zip").delete()
+    ant.zip(destfile: "win-youtube-dl.zip",
+            basedir: ".",
+            includes: "ffmpeg.exe, ffplay.exe, ffprobe.exe, youtube-dl.exe, win-youtube-dl.exe")
+    new File("win-youtube-dl.exe").delete()
+}
