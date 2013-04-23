@@ -141,8 +141,8 @@ public class WinYouTubeDownloader {
             @Override
             public void mouseDown(MouseEvent e) {
                 try {
-                    if (!folderText.getText().startsWith("http://")
-                        && !folderText.getText().startsWith("https://")) {
+                    if (!urlText.getText().startsWith("http://")
+                        && !urlText.getText().startsWith("https://")) {
                         MessageBox mb = new MessageBox(parent, SWT.ICON_ERROR);
                         mb.setText("Error");
                         mb.setMessage("The URL must start with http:// or https://");

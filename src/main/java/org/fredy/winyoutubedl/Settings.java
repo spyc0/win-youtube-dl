@@ -56,6 +56,10 @@ public class Settings {
         props = new Properties();
         try {
             props.load(new FileReader(PROP_FILE));
+            File downloadFile = new File((String) props.get(DIRECTORY_PROP));
+            if (!downloadFile.exists()) {
+                downloadFile.mkdirs();
+            }
         } catch (FileNotFoundException e) {
             throw new RuntimeException(e);
         } catch (IOException e) {
