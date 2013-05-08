@@ -73,6 +73,10 @@ public class WinYouTubeDownloader {
         display.dispose();
     }
     
+    private boolean validateURL(String url) {
+        return url.startsWith("http://") || url.startsWith("https://");
+    }
+    
     private void createContent(final Shell parent) {
         Composite c1 = new Composite(parent, SWT.BORDER);
         c1.setLayoutData(new GridData(SWT.FILL, SWT.NONE, true, false));
@@ -85,7 +89,18 @@ public class WinYouTubeDownloader {
         urlText.addKeyListener(new KeyAdapter() {
             @Override
             public void keyReleased(KeyEvent e) {
-                if (!urlText.getText().isEmpty()) {
+                if (validateURL(urlText.getText())) {
+                    downloadButton.setEnabled(true);
+                } else {
+                    downloadButton.setEnabled(false);
+                }
+                parent.pack();
+            }
+        });
+        urlText.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseUp(MouseEvent arg0) {
+                if (validateURL(urlText.getText())) {
                     downloadButton.setEnabled(true);
                 } else {
                     downloadButton.setEnabled(false);
@@ -141,8 +156,7 @@ public class WinYouTubeDownloader {
             @Override
             public void mouseDown(MouseEvent e) {
                 try {
-                    if (!urlText.getText().startsWith("http://")
-                        && !urlText.getText().startsWith("https://")) {
+                    if (!validateURL(urlText.getText())) {
                         MessageBox mb = new MessageBox(parent, SWT.ICON_ERROR);
                         mb.setText("Error");
                         mb.setMessage("The URL must start with http:// or https://");
