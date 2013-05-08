@@ -17,9 +17,9 @@ It also requires at least Java 7 (http://java.com/en/download/index.jsp).
 
     gradle -Plaunch4j=<launch4j_directory>
 
-How to install
+How to run
 --------------
-    Unzip win-youtube-dl.zip at (https://sourceforge.net/projects/winyoutubedl/files/latest/download)
+    Unzip win-youtube-dl.zip at https://sourceforge.net/projects/winyoutubedl/files/latest/download
     Double click on win-youtube-dl.exe
 
 Screenshot
